@@ -1,4 +1,4 @@
-package main.personaje;
+package personaje;
 
 import java.util.Objects;
 
