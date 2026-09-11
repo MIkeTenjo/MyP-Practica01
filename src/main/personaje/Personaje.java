@@ -1,6 +1,9 @@
 package personaje;
 
+import franquicia.Franquicia;
+import habilidad.Habilidad;
 import java.util.Objects;
+import objeto.Objeto;
 
 /**
  * Clase abstracta que representa a un personaje en la arena.
@@ -19,7 +22,7 @@ public abstract class Personaje {
     private int id;
 
     /** Franquicia de origen del personaje. */
-    private Franquicia franquicia;
+    public Franquicia franquicia;
 
     /** Objeto consumible actualmente equipado o absorbido. */
     private Objeto objeto; //Duda pendiente con el nombre de tipo de dato
@@ -166,6 +169,55 @@ public abstract class Personaje {
         this.ataque = ataque;
     }
 
+    /**
+     * Valida si el personaje tiene permitido consumir un objeto específico
+     * verificando que pertenezca a su misma franquicia
+     * 
+     * @param o Objeto que aparece en la arena.
+     * @return true si las franquicias coinciden, false si el objeto
+     *         es nulo o de otra franquicia.
+     */
+    public Boolean puedeAbsorber(Objeto o) {
+        if (o == null || o.getFranquicia() == null || this.franquicia == null) {
+            return false;
+        }
+        return this.franquicia == o.getFranquicia();
+    }
+
+    /**
+     * Consume un objeto y equipa la habilidad que contiene si es compatible con la franquicia
+     * 
+     * @param o Objeto que se desea absorber
+     */
+    public void absorberObjeto(Objeto o) {
+        if (puedeAbsorber(o)) {
+            setObjeto(o);
+            if (o.getHabilidad() != null) {
+                setHabilidad(o.getHabilidad());
+            }
+        }
+    }
+
+    /**
+     * Ejecuta una acción de ataque contra un rival
+     * 
+     * @param p Personaje rival que recibirá el impacto
+     */
+    public void Atacar(Personaje p) {
+        // Validaciones: que el objetivo exista, no sea él mismo y ambos sigan en pie
+        if (p == null || p == this || !this.estaVivo() || !p.estaVivo()) {
+            return;
+        }
+
+        // Delegación de comportamiento según el patrón Strategy
+        if (this.habilidadActual != null) {
+            this.habilidadActual.ejecutar(this, p);
+        } else {
+            // Comportamiento de ataque básico por defecto
+            p.recibirDano(this.ataque);
+        }
+    }
+
 
    
     /**
@@ -225,6 +277,16 @@ public abstract class Personaje {
         if (this == obj) return true;
         if (!(obj instanceof Personaje other)) return false;
         return this.id == other.id;
+    }
+
+    /**
+     * Genera el código hash del personaje con base en su identificador único
+     * 
+     * @return Código hash entero.
+     */
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(this.id);
     }
 
    
