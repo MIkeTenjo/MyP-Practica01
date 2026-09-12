@@ -76,6 +76,7 @@ public abstract class Objeto{
                 tiempoDeUso = 0;
             }
         }else{
+            habilidad = null;
             efectoConsumir(personaje);
         }
     }

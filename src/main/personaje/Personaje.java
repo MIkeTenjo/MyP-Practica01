@@ -25,7 +25,7 @@ public abstract class Personaje {
     public Franquicia franquicia;
 
     /** Objeto consumible actualmente equipado o absorbido. */
-    private Objeto objeto; //Duda pendiente con el nombre de tipo de dato
+    private Objeto objeto; 
 
     /** Puntos de vida (HP) restantes del personaje. */
     private int vida;
@@ -52,7 +52,6 @@ public abstract class Personaje {
      */
     public Personaje(String nombre, int id, Franquicia franquicia, int vida, int defensa, int ataque, Habilidad habilidadInicial) {
         this.Nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        this.id = id;
         this.id = id;
         this.franquicia = Objects.requireNonNull(franquicia, "La franquicia no puede ser nula");
         this.vida = vida;
@@ -209,13 +208,13 @@ public abstract class Personaje {
             return;
         }
 
+        // Comportamiento de ataque básico por defecto
+        p.recibirDano(this.ataque);
+
         // Delegación de comportamiento según el patrón Strategy
         if (this.habilidadActual != null) {
             this.habilidadActual.ejecutar(this, p);
-        } else {
-            // Comportamiento de ataque básico por defecto
-            p.recibirDano(this.ataque);
-        }
+        } 
     }
 
 
@@ -225,7 +224,7 @@ public abstract class Personaje {
      */
     public void Defender() {
         // Incremento temporal o ajuste de mitigación según la regla de juego
-        this.defensa = 1; //Valor Temploar
+        this.defensa += 1; //Valor Temploar
     }
 
     /**
