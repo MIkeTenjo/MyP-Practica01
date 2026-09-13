@@ -1,5 +1,3 @@
-package observer;
-
 /**
  * -----------------------------------------------------------------------------
  * SISTEMA DE TRANSMISIÓN DE PELEAS - PATRÓN OBSERVER
