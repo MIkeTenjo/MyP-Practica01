@@ -7,7 +7,7 @@ Nombre de los integrantes:
 
 - Santos Alcocer Antonio de Jesús. N.C: 420003090
 - Huaxcuahutli Teopantzin José Luis N.C: 320204603
-- Martínez Martínez Marco Antonio N.C: 
+- Martínez Martínez Marco Antonio N.C: 423116344
 
 # NOTAS DE LA PRÁCTICA.
 
@@ -40,14 +40,8 @@ javac -d bin $(find src -name "*.java")
 ---
 
 ### 2. Ejecución
-Una vez compilado, ejecuta la clase `Main` especificando la carpeta `bin` como el *classpath*:
+Una vez compilado, ejecuta la clase `Combate` especificando la carpeta `bin` como el *classpath*:
 
   ```bash
-  java -cp bin Main
-  ```
-
-Ó
-
-  ```bash
-  java -cp bin Main.Main
+  java -cp bin Combate
   ```
