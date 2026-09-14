@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import objeto.*;
-import personaje.*;
 import observer.*;
+import personaje.*;
 /**
  * Clase que simula un combate entre personajes de la clase {@link Personaje}.
  * 
@@ -31,6 +32,9 @@ public class Combate {
     /*El contador de los personajes. */
     private static int idContador = 0;
 
+    /*Constructor de Scanner */
+    private static final Scanner sc = new Scanner(System.in);
+
     /*Los personajes seleccionados. */
     private static final ArrayList<Personaje> personajesSeleccionados = new ArrayList<>();
 
@@ -47,6 +51,9 @@ public class Combate {
      * @return Un Espectador nuevo si es que se pudo unir. Null en otro caso.
      */
     public static Espectador intentarUnirEspectador(int idEspectador, double probabilidad){
+        if (idEspectador > 3) {
+            return null;
+        }
         if (random.nextDouble() < probabilidad) {
             String personajeFavorito = nombres[random.nextInt(nombres.length)];
             Espectador espectador = new Espectador("Espectador " + idEspectador, personajeFavorito);
@@ -227,48 +234,36 @@ public class Combate {
         return resultadoEvento;
     }
 
+    /**
+     * Metodo que genera un escenario de combate
+     * 
+     * @param numeroEscanario numero de escenario que se esta generando
+     * 
+     */
+    public static void ejecutarEscenario(int numeroEscenario) {
+        combateSimulacion.registrarEventoPelea("\n=============================================");
+        combateSimulacion.registrarEventoPelea("   INICIANDO ESCENARIO DE COMBATE #" + numeroEscenario);
+        combateSimulacion.registrarEventoPelea("=============================================");
 
+        // Limpiar lista e inicializar combatientes frescos para esta ronda
+        personajesSeleccionados.clear();
 
-
-    public static void main(String[] args) {
-        // Inicializando el anfitrión de la transmisión
-        anfitrion = new Espectador("Anfitrión", "Nadie");
-        anfitrion.recibirEvento(iniciarCombate());
-        //Se registra el nuevo Anfitrión que nos dará todo el combate en escrito.
-        combateSimulacion.registrarEspectador(anfitrion);
-
-        //Intento unir un nuevo espectador :)
-        unirseEspectador(intentarUnirEspectador(idContadorEspectadores++, 0.7));
-
-        //Inicialización de Korby
         Korby korby = new Korby(idContador++, null);
-        String msg = "Se ha unido al combate " + korby.Nombre + " con ID: " + korby.getIdentificacion();
-        combateSimulacion.registrarEventoPelea(msg);
-        personajesSeleccionados.add(korby);
-
-        //Inicialización de MeganMan
         MeganMan meganMan = new MeganMan(idContador++, null);
-        String msg2 = "Se ha unido al combate " + meganMan.Nombre + " con ID: " + meganMan.getIdentificacion();
-        combateSimulacion.registrarEventoPelea(msg2);
-        personajesSeleccionados.add(meganMan);
-
-        //Inicialización de Dittu.
         Dittu dittu = new Dittu(idContador++, null);
-        String msg3 = "Se ha unido al combate " + dittu.Nombre + " con ID: " + dittu.getIdentificacion();
-        combateSimulacion.registrarEventoPelea(msg3);
+
+        personajesSeleccionados.add(korby);
+        personajesSeleccionados.add(meganMan);
         personajesSeleccionados.add(dittu);
 
-        //Iniciar la pelea
+        combateSimulacion.registrarEventoPelea("Participantes listos: " + korby.Nombre + ", " + meganMan.Nombre + " y " + dittu.Nombre);
         combateSimulacion.registrarEventoPelea(iniciarPelea());
 
-        // Bucle dinámico de combate: continúa hasta que quede 1 solo luchador
+        // Bucle dinámico hasta que quede 1 solo sobreviviente
         while (personajesSeleccionados.size() > 1) {
-            
-            // Seleccionar dos participantes vivos al azar
             int indiceAtacante = random.nextInt(personajesSeleccionados.size());
             int indiceDefensor = random.nextInt(personajesSeleccionados.size());
-            
-            // Garantizar que no se ataquen a sí mismos
+
             while (indiceAtacante == indiceDefensor) {
                 indiceDefensor = random.nextInt(personajesSeleccionados.size());
             }
@@ -276,24 +271,65 @@ public class Combate {
             Personaje pAtacante = personajesSeleccionados.get(indiceAtacante);
             Personaje pDefensor = personajesSeleccionados.get(indiceDefensor);
 
-            //  Genera el evento de esta ronda y lo registra.
             String eventoActual = generarEventoAleatorio(pAtacante, pDefensor);
             combateSimulacion.registrarEventoPelea(eventoActual);
-            
-            //Si un personaje perdió entonces se elimina del combate.
+
             if (!pDefensor.estaVivo()) {
                 combateSimulacion.registrarEventoPelea(perdio(pDefensor));
                 personajesSeleccionados.remove(pDefensor);
             }
-
         }
 
-        // Declarar al ganador
+        // Ganador del escenario actual
         if (personajesSeleccionados.size() == 1) {
             Personaje campeon = personajesSeleccionados.get(0);
-            combateSimulacion.finalizarCombate(campeon.Nombre);
+            combateSimulacion.registrarEventoPelea("¡" + campeon.Nombre + " es el ganador del Escenario #" + numeroEscenario + "!\n");
+            
+            // Solo se invoca finalizarCombate en el último escenario para cerrar los archivos .txt
+            if (numeroEscenario == 3) {
+                combateSimulacion.finalizarCombate(campeon.Nombre);
+            }
+        }
+        if (personajesSeleccionados.size() == 1) {
+            Personaje campeon = personajesSeleccionados.get(0);
+            String victoria = "¡" + campeon.Nombre + " es el ganador del Escenario #" + numeroEscenario + "!\n";
+            combateSimulacion.registrarEventoPelea(victoria);
+            
+            if (numeroEscenario < 3) {
+                System.out.println("Presiona [ENTER] para continuar al siguiente escenario...");
+                sc.nextLine(); 
+            } else {
+                combateSimulacion.finalizarCombate(campeon.Nombre);
+            }
+        }
+    }
+
+
+    public static void main(String[] args) {
+        // 1. Registro obligatorio de los espectadores requeridos
+        anfitrion = new Espectador("Anfitrión", "Nadie");
+        combateSimulacion.registrarEspectador(anfitrion);
+        
+        Espectador e1 = new Espectador("Espectador 1", "Korby");
+        Espectador e2 = new Espectador("Espectador 2", "MeganMan");
+        Espectador e3 = new Espectador("Espectador 3", "Dittu");
+
+        combateSimulacion.registrarEspectador(e1);
+        combateSimulacion.registrarEspectador(e2);
+        combateSimulacion.registrarEspectador(e3);
+
+        // 2. Ejecutar los 3 escenarios consecutivos
+        for (int i = 1; i <= 3; i++) {
+            ejecutarEscenario(i);
         }
 
     }
 
+
+    
 }
+
+
+
+
+
