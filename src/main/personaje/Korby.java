@@ -21,7 +21,7 @@ public class Korby extends Personaje {
      */
     public Korby(int id, Habilidad habilidadInicial) {
         // Parametros: Nombre, id, franquicia, vida, defensa, ataque, habilidadInicial
-        super("Korby", id, Franquicia.NIENTIENDO, 100, 6, 31, habilidadInicial);
+        super("Korby", id, Franquicia.NIENTIENDO, 100, 10, 25, habilidadInicial);
     }
 
     /**

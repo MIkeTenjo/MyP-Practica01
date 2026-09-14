@@ -20,7 +20,7 @@ public class MeganMan extends Personaje {
      */
     public MeganMan(int id, Habilidad habilidadInicial) {
         // Parametros: Nombre, id, franquicia, vida, defensa, ataque, habilidadInicial
-        super("MeganMan", id, Franquicia.COPCAM, 100, 8, 39, habilidadInicial);
+        super("MeganMan", id, Franquicia.COPCAM, 100, 8, 27, habilidadInicial);
     }
 
     /**

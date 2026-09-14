@@ -71,12 +71,13 @@ public abstract class Objeto{
      */
     public void consumir(int tiempo, Personaje personaje){
         if(!estaConsumido()){
-            tiempoDeUso -= tiempo;
+            tiempoDeUso = tiempoDeUso - tiempo;
             if(tiempoDeUso < 0){
                 tiempoDeUso = 0;
             }
         }else{
             habilidad = null;
+            personaje.setHabilidad(null);
             efectoConsumir(personaje);
         }
     }

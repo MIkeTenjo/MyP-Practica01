@@ -21,7 +21,7 @@ public class Dittu extends Personaje {
      */
     public Dittu(int id, Habilidad habilidadInicial) {
         // Parametros: Nombre, id, franquicia, vida, defensa, ataque, habilidadInicial
-        super("Dittu", id, Franquicia.CHINPOKOMON, 100, 25, 35, habilidadInicial);
+        super("Dittu", id, Franquicia.CHINPOKOMON, 100, 12, 20, habilidadInicial);
     }
 
     /**

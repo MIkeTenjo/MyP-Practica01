@@ -1,9 +1,12 @@
 package personaje;
 
 import franquicia.Franquicia;
+import habilidad.Escudo;
 import habilidad.Habilidad;
+import habilidad.Indestructible;
 import java.util.Objects;
 import objeto.Objeto;
+import java.util.Random;
 
 /**
  * Clase abstracta que representa a un personaje en la arena.
@@ -177,10 +180,10 @@ public abstract class Personaje {
      *         es nulo o de otra franquicia.
      */
     public Boolean puedeAbsorber(Objeto o) {
-        if (o == null || o.getFranquicia() == null || this.franquicia == null) {
+        if (o == null || o.getFranquicia() == null || this.franquicia == null ||  o.equals(objeto)) {
             return false;
         }
-        return this.franquicia == o.getFranquicia();
+        return this.franquicia == o.getFranquicia() && habilidadActual == null;
     }
 
     /**
@@ -191,9 +194,7 @@ public abstract class Personaje {
     public void absorberObjeto(Objeto o) {
         if (puedeAbsorber(o)) {
             setObjeto(o);
-            if (o.getHabilidad() != null) {
-                setHabilidad(o.getHabilidad());
-            }
+            setHabilidad(o.getHabilidad());
         }
     }
 
@@ -214,6 +215,8 @@ public abstract class Personaje {
         // Delegación de comportamiento según el patrón Strategy
         if (this.habilidadActual != null) {
             this.habilidadActual.ejecutar(this, p);
+            Random r = new Random();
+            objeto.consumir(r.nextInt(10), p);
         } 
     }
 
@@ -233,6 +236,9 @@ public abstract class Personaje {
      * @param dano Cantidad de daño entrante.
      */
     public void recibirDano(int dano) {
+        if(getHabilidad() instanceof  Indestructible || getHabilidad() instanceof Escudo){
+            habilidadActual.ejecutar(this, this);
+        }
         int danoEfectivo = Math.max(1, dano - this.defensa);
         setVida(this.vida - danoEfectivo);
     }

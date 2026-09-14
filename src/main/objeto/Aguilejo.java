@@ -11,7 +11,7 @@ import personaje.Personaje;
 public class Aguilejo extends Objeto{
     
     public Aguilejo(){
-        super(Franquicia.NIENTIENDO, "Aguilejo", 9, new AtaqueAereo());
+        super(Franquicia.CHINPOKOMON, "Aguilejo", 9, new AtaqueAereo());
     }
 
     @Override protected void efectoConsumir(Personaje personaje){
